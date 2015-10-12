@@ -1,0 +1,131 @@
+
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>花瓣飘落</title> 
+<style>
+   body{
+      padding:0;margin:0;
+   }
+   #content{
+       width:99.9%;height:99.5%;overflow:hidden;position:absolute;
+   }
+   .snowRoll{
+       position:absolute;opacity:0;
+	   -webkit-animation-name:mysonw;
+	   -webkit-animation-duration:20s;
+	   -moz-animation-name:mysonw;
+	   -moz-animation-duration:20s;
+	   height:20px;    
+   }
+   @keyframes mysonw{
+      0%{bottom:100%;}
+	  50%{transform:rotate(1080deg)}
+	  100%{transform:rotate(0deg) translate3d(50px,50px,50px);}
+   }
+   @-webkit-keyframes mysonw{
+      0%{bottom:100%;}
+	  50%{-webkit-transform:rotate(1080deg)}
+	  100%{-webkit-transform:rotate(0deg) translate3d(50px,50px,50px);}
+   }
+   @-moz-keyframes mysonw{
+      0%{bottom:100%;}
+	  50%{-moz-transform:rotate(1080deg)}
+	  100%{-moz-transform:rotate(0deg) translate3d(50px,50px,50px);}
+   }
+</style>
+<script src="js/jquery-1.11.3.min.js" ></script>
+<script src="js/transition.js" ></script>
+<script>
+  $(function() {
+
+    var snowflakeURl = [
+        'images/o_1.png',
+		 'images/o_2.png',
+		 'images/o_3.png',
+		 'images/o_4.png',
+		 'images/o_5.png',
+		 'images/o_6.png',
+    ]
+ var container=$("#content");
+		 var visualWidth=container.width();
+		 var visualHeight=container.height();
+    ///////
+    //飘雪花 //
+    ///////
+    function snowflake() {
+        // 雪花容器
+        var $flakeContainer = $('#snowflake');
+
+        // 随机六张图
+        function getImagesName() {
+            return snowflakeURl[[Math.floor(Math.random() * 6)]];
+        }
+        // 创建一个雪花元素
+        function createSnowBox() {
+            var url = getImagesName();
+            return $('<div class="snowbox" />').css({
+                'width': 41,
+                'height': 41,
+                'position': 'absolute',
+                'backgroundSize': 'cover',
+                'zIndex': 100000,
+                'top': '-41px',
+                'backgroundImage': 'url(' + url + ')'
+            }).addClass('snowRoll');
+        }
+        // 开始飘花
+        setInterval(function() {
+            // 运动的轨迹
+            var startPositionLeft = Math.random() * visualWidth - 100,
+                startOpacity    = 1,
+                endPositionTop  = visualHeight - 40,
+                endPositionLeft = startPositionLeft - 100 + Math.random() * 500,
+                duration        = visualHeight * 10 + Math.random() * 5000;
+
+            // 随机透明度，不小于0.5
+            var randomStart = Math.random();
+            randomStart = randomStart < 0.5 ? startOpacity : randomStart;
+
+            // 创建一个雪花
+            var $flake = createSnowBox();
+
+            // 设计起点位置
+            $flake.css({
+                left: startPositionLeft,
+                opacity : randomStart
+            });
+
+            // 加入到容器
+            $flakeContainer.append($flake);
+
+            // 开始执行动画
+            $flake.transition({
+                top: endPositionTop,
+                left: endPositionLeft,
+                opacity: 0.7
+            }, duration, 'ease-out', function() {
+                $(this).remove() //结束后删除
+            });
+            
+        }, 200);
+    }
+
+
+    //开始
+    snowflake();
+  });
+  
+</script>
+
+</head> 
+<body> 
+   <div id="content">
+      <!--飘花-->
+      <div id="snowflake"></div>
+   </div>
+ 
+</body> 
+</html> 
+
